@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заполнить анкету</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <nav>
+        <section id="navigation">
+            <a href="index.html">Главная</a>
+            <a href="event.html">Мероприятия</a>
+            <a href="profile.html">Профиль</a>
+            <a href="register.html">Регистрация</a>
+        </section> 
+    </nav>
+
+<h2>Заполнить анкету</h2>
+
+<form id="profileForm">
+    <input type="text" id="name" placeholder="Ваше имя" required>
+    <input type="number" id="age" placeholder="Возраст" required>
+    <input type="text" id="skills" placeholder="Навыки" required>
+    <textarea id="description" placeholder="Краткое описание опыта"></textarea>
+    <button type="submit">Сохранить</button>
+</form>
+
+<script>
+    const currentUserEmail = localStorage.getItem("currentUser");
+    if (!currentUserEmail) {
+        window.location.href = "login.html";
+    }
+
+    const storedUser = localStorage.getItem(currentUserEmail);
+    const user = JSON.parse(storedUser);
+
+    // Если анкета уже заполнена — заполняем поля
+    if (user.profile) {
+        document.getElementById("name").value = user.profile.name || "";
+        document.getElementById("age").value = user.profile.age || "";
+        document.getElementById("skills").value = user.profile.skills || "";
+        document.getElementById("description").value = user.profile.description || "";
+    }
+
+    // Сохраняем анкету
+    document.getElementById("profileForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        user.profile = {
+            name: document.getElementById("name").value,
+            age: document.getElementById("age").value,
+            skills: document.getElementById("skills").value,
+            description: document.getElementById("description").value
+        };
+
+        localStorage.setItem(currentUserEmail, JSON.stringify(user));
+
+        alert("Анкета сохранена!");
+        window.location.href = "profile.html"; // возвращаемся в профиль
+    });
+</script>
+
+</body>
+</html>
